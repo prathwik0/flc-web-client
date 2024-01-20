@@ -1,5 +1,5 @@
 <script>
-	import AuthButton from '../Auth/AuthButton.svelte';
+	import AuthButton from '$lib/components/Auth/AuthButton.svelte';
 </script>
 
 <div

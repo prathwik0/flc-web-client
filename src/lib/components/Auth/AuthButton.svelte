@@ -1,8 +1,9 @@
 <script>
-	import { auth, user, userLoaded } from '$lib/firebase/config';
+	import { auth, user } from '$lib/firebase/config';
 	import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 
 	async function signInWithGoogle() {
+		console.log('Sign in with Google');
 		const provider = new GoogleAuthProvider();
 		await signInWithPopup(auth, provider);
 		loggedIn = true;
@@ -15,18 +16,20 @@
 	let loggedIn = false;
 </script>
 
-{#if $user && $userLoaded}
+{#if $user}
 	<button
+		class="border-2 border-black rounded-md px-4 py-2"
 		on:click={() => {
-			signOutSSR;
+			signOutSSR();
 		}}
 	>
 		SignOut
 	</button>
 {:else}
 	<button
+		class="border-2 border-black rounded-md px-4 py-2"
 		on:click={() => {
-			signInWithGoogle;
+			signInWithGoogle();
 		}}
 	>
 		Login
