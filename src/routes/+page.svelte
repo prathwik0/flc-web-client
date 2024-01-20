@@ -1,17 +1,4 @@
 <div class="bg-[#fad6ca] text-[#2a4fb2]">
-	<div
-		class="flex justify-between fixed w-full py-6 sm:px-8 px-2 font-semibold bg-[#fad6ca] items-center"
-	>
-		<a href="https://finiteloop.co.in" target="_blank">
-			<span class="flex items-center gap-x-2">
-				<img src="/flc_logo_crop.png" alt="flc_Logo" class="md:h-16 h-12" />
-				<h3 class="sm:text-2xl text-md font-bold">Finite Loop Club</h3>
-			</span>
-		</a>
-		<a href="https://www.instagram.com/p/C2ES0MOv7tK/" target="_blank">
-			<h3 class="sm:text-2xl text-md font-bold">HackLoop</h3>
-		</a>
-	</div>
 	<div class="flex items-center justify-center w-full min-h-screen pt-32">
 		<div class="w-[80%] justify-center space-y-8">
 			<h1 class="md:text-6xl text-3xl font-bold">About this project</h1>

@@ -1,6 +1,9 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
+import { deleteApp, getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged, type User } from 'firebase/auth';
+import { doc, getFirestore, onSnapshot } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+import { derived, get, writable, type Readable, type Writable } from 'svelte/store';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -17,5 +20,57 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
+let app: FirebaseApp;
+if (!getApps().length) {
+	app = initializeApp(firebaseConfig);
+} else {
+	app = getApp();
+	deleteApp(app);
+	app = initializeApp(firebaseConfig);
+}
+
+export const db = getFirestore(app);
+export const auth = getAuth(app);
+export const storage = getStorage(app);
+
+function userStore() {
+	let unsubscribe: () => void;
+
+	if (!auth || !globalThis.window) {
+		console.warn('Not in browser or Firebase Auth function is not initialized');
+		const { subscribe } = writable<User | null>(null);
+		return {
+			subscribe
+		};
+	}
+
+	const { subscribe } = writable(auth?.currentUser ?? null, (set) => {
+		unsubscribe = onAuthStateChanged(auth, (user) => {
+			set(user);
+		});
+
+		return () => unsubscribe();
+	});
+
+	return {
+		subscribe
+	};
+}
+
+export const user = userStore();
+/** Helper store for userLoaded */
+export const called: Writable<boolean> = writable(false);
+
+/** indicates whether the user (if present) is loaded or is still currently loading */
+export const userLoaded: Writable<boolean> = writable(false);
+onAuthStateChanged(auth, (user) => {
+	if (!auth || !globalThis.window) {
+		return;
+	}
+	called.set(true);
+	if (user) {
+		userLoaded.set(false);
+	} else {
+		userLoaded.set(true);
+	}
+});
